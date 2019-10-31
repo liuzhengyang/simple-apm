@@ -2,6 +2,7 @@ package com.github.liuzhengyang.simpleapm.agent;
 
 import static org.objectweb.asm.Opcodes.ASM5;
 
+import java.io.Serializable;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
@@ -15,6 +16,8 @@ import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
+import org.mvel2.MVEL;
+import org.mvel2.ParserContext;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -40,15 +43,14 @@ public class ApmHandler extends SimpleChannelInboundHandler<ApmCommand> {
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, ApmCommand apmCommand) throws Exception {
         logger.info("Receive command {}", apmCommand);
         Command commandType = apmCommand.getCommandType();
-        String classPattern = apmCommand.getArgs().get(0);
-        Pattern pattern = Pattern.compile(classPattern);
-        Instrumentation instrumentation = InstrumentationHolder.getInstrumentation();
-        Class[] allLoadedClasses = instrumentation.getAllLoadedClasses();
         ChannelContextHolder.setChannelContext(channelHandlerContext);
 
         switch (commandType) {
             case SEARCH_CLASS:
-
+                String classPattern = apmCommand.getArgs().get(0);
+                Pattern pattern = Pattern.compile(classPattern);
+                Instrumentation instrumentation = InstrumentationHolder.getInstrumentation();
+                Class[] allLoadedClasses = instrumentation.getAllLoadedClasses();
                 List<Class<?>> targetClassList = new ArrayList<>();
                 for (Class allLoadedClass : allLoadedClasses) {
                     if (pattern.matcher(allLoadedClass.getName()).matches()) {
@@ -61,6 +63,10 @@ public class ApmHandler extends SimpleChannelInboundHandler<ApmCommand> {
                 channelHandlerContext.flush();
                 break;
             case WATCH:
+                classPattern = apmCommand.getArgs().get(0);
+                pattern = Pattern.compile(classPattern);
+                instrumentation = InstrumentationHolder.getInstrumentation();
+                allLoadedClasses = instrumentation.getAllLoadedClasses();
                 List<String> args = apmCommand.getArgs();
                 Pattern methodPattern = Pattern.compile(args.get(1));
                 List<Class<?>> toInstrumentClassList = new ArrayList<>();
@@ -101,6 +107,12 @@ public class ApmHandler extends SimpleChannelInboundHandler<ApmCommand> {
                 }
                 break;
 
+            case MVEL:
+                ParserContext parserContext = new ParserContext();
+                Serializable expression = MVEL.compileExpression(apmCommand.getAllArgsString(), parserContext);
+                Object result = MVEL.executeExpression(expression);
+                channelHandlerContext.writeAndFlush(JsonUtils.toJson(result) + "\r\n");
+                break;
             default:
                 break;
         }

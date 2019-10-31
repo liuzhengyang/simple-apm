@@ -28,17 +28,18 @@ public class ApmCommandDecoder extends MessageToMessageDecoder<String> {
 
     protected void decode(ChannelHandlerContext channelHandlerContext, String s, List<Object> list) throws Exception {
         List<String> splits = commandSplitter.splitToList(s);
-        System.out.println(splits);
-        if (splits.size() < 1) {
-            channelHandlerContext.write("Illegal command " + s);
-        }
-        String commandStr = splits.get(0);
-        Command command = Command.getByCommand(commandStr);
         ApmCommand apmCommand = new ApmCommand();
+        String commandStr = splits.size() > 1 ? splits.get(0) : "";
+        Command command = Command.getByCommand(commandStr);
         apmCommand.setCommandType(command);
-        if (splits.size() > 1) {
-            apmCommand.setArgs(splits.subList(1, splits.size()));
+        if (command == Command.MVEL) {
+            apmCommand.setAllArgsString(s);
+        } else {
+            if (splits.size() > 1) {
+                apmCommand.setArgs(splits.subList(1, splits.size()));
+            }
         }
+
         list.add(apmCommand);
     }
 
@@ -48,6 +49,7 @@ public class ApmCommandDecoder extends MessageToMessageDecoder<String> {
         MONITOR("monitor"),
         CLASS_LOADER("classloader"),
         SEARCH_CLASS("sc"),
+        MVEL("mvel"),
         ;
         private final String name;
         static Map<String, Command> commandByName = new HashMap<String, Command>();
@@ -61,7 +63,7 @@ public class ApmCommandDecoder extends MessageToMessageDecoder<String> {
             return Arrays.stream(values())
                     .filter(e -> e.name.equalsIgnoreCase(command))
                     .findFirst()
-                    .orElse(HELP);
+                    .orElse(MVEL);
         }
     }
 }

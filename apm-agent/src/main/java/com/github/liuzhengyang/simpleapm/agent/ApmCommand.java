@@ -10,6 +10,7 @@ import com.github.liuzhengyang.simpleapm.agent.ApmCommandDecoder.Command;
  */
 public class ApmCommand {
     private Command commandType;
+    private String allArgsString;
     private List<String> args;
 
     public Command getCommandType() {
@@ -26,6 +27,15 @@ public class ApmCommand {
 
     public void setArgs(List<String> args) {
         this.args = args;
+    }
+
+    public String getAllArgsString() {
+        return allArgsString;
+    }
+
+    public ApmCommand setAllArgsString(String allArgsString) {
+        this.allArgsString = allArgsString;
+        return this;
     }
 
     @Override
