@@ -24,6 +24,8 @@ public class VertxServer {
 
     public static CommandProcess currentProcess = null;
 
+    private static final int PORT = 6000;
+
     public static void main(String[] args) {
         Instrumentation install = ByteBuddyAgent.install();
         InstrumentationHolder.setInstrumentation(install);
@@ -36,13 +38,14 @@ public class VertxServer {
                 new ShellServiceOptions().setTelnetOptions(
                         new TelnetTermOptions().
                                 setHost("localhost").
-                                setPort(4000)
+                                setPort(PORT)
                 )
         );
         WatchCommand.buildWatchCommand(vertx);
         buildShutdownCommand(vertx);
         buildSearchClassCommand(vertx);
         service.start();
+        logger.info("Server started at {}", PORT);
     }
 
     private static void buildSearchClassCommand(Vertx vertx) {

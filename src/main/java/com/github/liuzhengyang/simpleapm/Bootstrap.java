@@ -18,6 +18,7 @@ public class Bootstrap {
         try {
             VirtualMachine attach = VirtualMachine.attach(targetPid);
             attach.loadAgent(agentPath);
+            attach.detach();
         } catch (AttachNotSupportedException e) {
             e.printStackTrace();
         } catch (IOException e) {
