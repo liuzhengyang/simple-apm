@@ -1,8 +1,8 @@
-package com.github.liuzhengyang.simpleapm.agent;
+package com.github.liuzhengyang.simpleapm.agent.netty;
 
 import java.util.List;
 
-import com.github.liuzhengyang.simpleapm.agent.ApmCommandDecoder.Command;
+import com.github.liuzhengyang.simpleapm.agent.netty.ApmCommandDecoder.Command;
 
 /**
  * @author liuzhengyang

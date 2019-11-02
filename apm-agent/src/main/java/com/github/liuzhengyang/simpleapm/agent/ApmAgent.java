@@ -24,6 +24,6 @@ public class ApmAgent {
 
     private static void doInstrument(String args, Instrumentation instrumentation) {
         InstrumentationHolder.setInstrumentation(instrumentation);
-        BootstrapServer.start();
+        VertxServer.startShellServer();
     }
 }
