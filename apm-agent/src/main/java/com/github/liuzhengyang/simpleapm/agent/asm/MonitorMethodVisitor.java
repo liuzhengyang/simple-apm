@@ -29,10 +29,10 @@ public class MonitorMethodVisitor extends AdviceAdapter {
 
     @Override
     protected void onMethodExit(int opcode) {
+        loadReturnValue(opcode);
         push(className);
         push(methodName);
-        loadReturnValue(opcode);
-        Method exitMethod = Method.getMethod("void exit (String,String,Object)");
+        Method exitMethod = Method.getMethod("void exit (Object,String,String)");
         invokeStatic(Type.getType(ThreadLocalMonitorTracer.class), exitMethod);
     }
 

@@ -12,6 +12,7 @@ import org.objectweb.asm.ClassWriter;
 import com.github.liuzhengyang.simpleapm.agent.InstrumentationHolder;
 import com.github.liuzhengyang.simpleapm.agent.asm.MonitorClassVisitor;
 import com.github.liuzhengyang.simpleapm.agent.util.DumpUtils;
+import com.github.liuzhengyang.simpleapm.agent.util.ObjectFormatter;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.cli.Argument;
@@ -35,6 +36,10 @@ public class WatchCommand {
             Pattern classPattern = Pattern.compile(args.get(0));
             allLoadedClasses = instrumentation.getAllLoadedClasses();
             Pattern methodPattern = Pattern.compile(args.get(1));
+            if (args.size() > 2) {
+                String resultPattern = args.get(2);
+                ObjectFormatter.setPattern(resultPattern);
+            }
             List<Class<?>> toInstrumentClassList = new ArrayList<>();
             for (Class loadedClass : allLoadedClasses) {
                 if (classPattern.matcher(loadedClass.getName()).matches()) {
