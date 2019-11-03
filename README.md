@@ -24,3 +24,8 @@ Search Class
 
 执行表达式
 ![el](./docs/images/el.png)
+
+### websocket
+
+支持websocket链接，并且提供了一个默认的websocket页面
+![websocket](./docs/images/websocket.png)

@@ -14,6 +14,7 @@ import io.vertx.core.Vertx;
 import io.vertx.ext.shell.ShellService;
 import io.vertx.ext.shell.ShellServiceOptions;
 import io.vertx.ext.shell.command.CommandProcess;
+import io.vertx.ext.shell.term.HttpTermOptions;
 import io.vertx.ext.shell.term.TelnetTermOptions;
 import net.bytebuddy.agent.ByteBuddyAgent;
 
@@ -25,6 +26,7 @@ public class VertxServer {
     public static CommandProcess currentProcess = null;
 
     private static final int TCP_PORT = 6000;
+    private static final int HTTP_PORT = 5000;
 
     public static void main(String[] args) {
         Instrumentation install = ByteBuddyAgent.install();
@@ -37,15 +39,18 @@ public class VertxServer {
         ShellService service = ShellService.create(vertx,
                 new ShellServiceOptions()
                         .setWelcomeMessage(getBanner())
-                        .setTelnetOptions(new TelnetTermOptions().
-                                setHost("localhost").
-                                setPort(TCP_PORT)
-                )
+                        .setTelnetOptions(new TelnetTermOptions()
+                                .setHost("localhost")
+                                .setPort(TCP_PORT))
+                .setHttpOptions(new HttpTermOptions()
+                        .setHost("localhost")
+                        .setPort(HTTP_PORT))
         );
         WatchCommand.buildWatchCommand(vertx);
         ShutdownCommand.buildShutdownCommand(vertx);
         SearchClassCommand.buildSearchClassCommand(vertx);
         ExpressionLanguageCommand.buildExpressionCommand(vertx);
+
         service.start();
         logger.info("Server started at {}", TCP_PORT);
     }
