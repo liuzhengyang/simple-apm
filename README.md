@@ -5,6 +5,14 @@
 javaagent运行时attach到目标进程，通过netty启动一个rpc接口，接收命令，如果是监控方法耗时、参数、返回值的watch命令，
 则创建一个ClassFileTransformer, 通过ASM修改对应的类，在方法前后注入代码，调用Instrumentation.retransform方法完成增强。
 
+# Quick Start
+
+release中下载boot.jar和agent.jar
+```
+java -Xbootclasspath/a:${机器上tools.jar位置} -jar apm-boot-1.0-SNAPSHOT-jar-with-dependencies.jar apm-agent-1.0-SNAPSHOT-jar-with-dependencies.jar的全路径位置 目标进程id
+```
+启动完成后，可以访问http://localhost:5000/shell.html或者`telnet localhost 6000`进行访问
+
 ## Commands
 
 目前实现的方法有
