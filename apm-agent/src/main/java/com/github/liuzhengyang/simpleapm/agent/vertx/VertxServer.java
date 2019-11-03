@@ -42,14 +42,15 @@ public class VertxServer {
                         .setTelnetOptions(new TelnetTermOptions()
                                 .setHost("localhost")
                                 .setPort(TCP_PORT))
-                .setHttpOptions(new HttpTermOptions()
-                        .setHost("localhost")
-                        .setPort(HTTP_PORT))
+                        .setHttpOptions(new HttpTermOptions()
+                                .setHost("localhost")
+                                .setPort(HTTP_PORT))
         );
         WatchCommand.buildWatchCommand(vertx);
         ShutdownCommand.buildShutdownCommand(vertx);
         SearchClassCommand.buildSearchClassCommand(vertx);
         ExpressionLanguageCommand.buildExpressionCommand(vertx);
+        ClassLoaderCommand.buildClassLoaderCommand(vertx);
 
         service.start();
         logger.info("Server started at {}", TCP_PORT);

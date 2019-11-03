@@ -45,7 +45,6 @@ public class WatchCommand {
     }
 
     private static void watchProcessHelper(CommandProcess process) {
-        VertxServer.currentProcess = process;
         List<String> args = process.args();
         Instrumentation instrumentation = InstrumentationHolder.getInstrumentation();
         Class[] allLoadedClasses;
