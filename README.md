@@ -11,7 +11,7 @@ release中下载boot.jar和agent.jar
 ```
 java -Xbootclasspath/a:${机器上tools.jar位置} -jar apm-boot-1.0-SNAPSHOT-jar-with-dependencies.jar apm-agent-1.0-SNAPSHOT-jar-with-dependencies.jar的全路径位置 目标进程id
 ```
-启动完成后，可以访问http://localhost:5000/shell.html或者`telnet localhost 6000`进行访问
+启动完成后，可以访问http://localhost:5000/shell.html 或者 `telnet localhost 6000`进行访问
 
 ## Commands
 
