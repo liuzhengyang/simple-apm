@@ -1,5 +1,7 @@
 package com.github.liuzhengyang.simpleapm.agent.vertx;
 
+import static com.github.liuzhengyang.simpleapm.agent.util.BannerUtil.getBanner;
+
 import java.lang.instrument.Instrumentation;
 
 import org.slf4j.Logger;
@@ -22,7 +24,7 @@ public class VertxServer {
 
     public static CommandProcess currentProcess = null;
 
-    private static final int PORT = 6000;
+    private static final int TCP_PORT = 6000;
 
     public static void main(String[] args) {
         Instrumentation install = ByteBuddyAgent.install();
@@ -33,10 +35,11 @@ public class VertxServer {
 
     public static void startShellServer() {
         ShellService service = ShellService.create(vertx,
-                new ShellServiceOptions().setTelnetOptions(
-                        new TelnetTermOptions().
+                new ShellServiceOptions()
+                        .setWelcomeMessage(getBanner())
+                        .setTelnetOptions(new TelnetTermOptions().
                                 setHost("localhost").
-                                setPort(PORT)
+                                setPort(TCP_PORT)
                 )
         );
         WatchCommand.buildWatchCommand(vertx);
@@ -44,9 +47,7 @@ public class VertxServer {
         SearchClassCommand.buildSearchClassCommand(vertx);
         ExpressionLanguageCommand.buildExpressionCommand(vertx);
         service.start();
-        logger.info("Server started at {}", PORT);
+        logger.info("Server started at {}", TCP_PORT);
     }
-
-
 
 }
