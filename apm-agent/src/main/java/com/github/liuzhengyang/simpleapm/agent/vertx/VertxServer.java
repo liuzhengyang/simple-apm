@@ -40,10 +40,8 @@ public class VertxServer {
                 new ShellServiceOptions()
                         .setWelcomeMessage(getBanner())
                         .setTelnetOptions(new TelnetTermOptions()
-                                .setHost("localhost")
                                 .setPort(TCP_PORT))
                         .setHttpOptions(new HttpTermOptions()
-                                .setHost("localhost")
                                 .setPort(HTTP_PORT))
         );
         WatchCommand.buildWatchCommand(vertx);
