@@ -3,6 +3,7 @@ package com.github.liuzhengyang.simpleapm.agent.vertx;
 import static com.github.liuzhengyang.simpleapm.agent.util.BannerUtil.getBanner;
 
 import java.lang.instrument.Instrumentation;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,12 +44,14 @@ public class VertxServer {
                                 .setPort(TCP_PORT))
                         .setHttpOptions(new HttpTermOptions()
                                 .setPort(HTTP_PORT))
+                        .setSessionTimeout(TimeUnit.DAYS.toMillis(1))
         );
         WatchCommand.buildWatchCommand(vertx);
         ShutdownCommand.buildShutdownCommand(vertx);
         SearchClassCommand.buildSearchClassCommand(vertx);
         ExpressionLanguageCommand.buildExpressionCommand(vertx);
         ClassLoaderCommand.buildClassLoaderCommand(vertx);
+        DumpCommand.buildDumpCommand(vertx);
 
         service.start();
         logger.info("Server started at {}", TCP_PORT);

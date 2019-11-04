@@ -33,6 +33,14 @@ Search Class
 执行表达式
 ![el](./docs/images/el.png)
 
+### dump
+
+dump一个class到本地class文件
+
+```
+dump xxxx.class
+```
+
 ### websocket
 
 支持websocket链接，并且提供了一个默认的websocket页面

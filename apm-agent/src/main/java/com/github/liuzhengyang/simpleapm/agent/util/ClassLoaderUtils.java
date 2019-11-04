@@ -8,7 +8,7 @@ import com.github.liuzhengyang.simpleapm.agent.InstrumentationHolder;
 
 public class ClassLoaderUtils {
     public static ClassLoader getLoader(String hashCode) {
-        return getAllClassLoader().get(hashCode);
+        return getAllClassLoader().getOrDefault(hashCode, ClassLoaderUtils.class.getClassLoader());
     }
 
     public static Map<String, ClassLoader> getAllClassLoader() {
