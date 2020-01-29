@@ -1,4 +1,4 @@
-package com.github.liuzhengyang.simpleapm.agent.vertx;
+package com.github.liuzhengyang.simpleapm.agent.command;
 
 import java.io.Serializable;
 
@@ -7,29 +7,32 @@ import org.mvel2.ParserConfiguration;
 import org.mvel2.ParserContext;
 
 import com.github.liuzhengyang.simpleapm.agent.Constants;
-import com.github.liuzhengyang.simpleapm.agent.Looper;
 import com.github.liuzhengyang.simpleapm.agent.util.ClassLoaderUtils;
 import com.github.liuzhengyang.simpleapm.agent.util.JsonUtils;
 
-import io.vertx.core.Vertx;
+import io.vertx.core.Handler;
 import io.vertx.core.cli.Argument;
 import io.vertx.core.cli.CLI;
 import io.vertx.core.cli.Option;
 import io.vertx.ext.shell.command.CommandBuilder;
-import io.vertx.ext.shell.command.CommandRegistry;
+import io.vertx.ext.shell.command.CommandProcess;
 
-public class ExpressionLanguageCommand {
-    public static void buildExpressionCommand(Vertx vertx) {
+public class ExpressionLanguageCommand implements ApmCommand {
 
+    @Override
+    public CommandBuilder getCommandBuilder() {
         CLI cli = CLI.create("el").
                 addArgument(new Argument().setRequired(true).setArgName("expression")).
                 addArgument(new Argument().setRequired(false).setArgName("classloader")).
                 addArgument(new Argument().setRequired(false).setArgName("imports")).
                 addOption(new Option().setArgName("help").setShortName("h").setLongName("help"));
 
-        CommandBuilder builder = CommandBuilder.command(cli);
+        return CommandBuilder.command(cli);
+    }
 
-        builder.processHandler(process -> {
+    @Override
+    public Handler<CommandProcess> getCommandProcessHandler() {
+        return process -> {
             String classLoaderHashCode = process.commandLine().getArgumentValue("classloader");
             String line = process.commandLine().getArgumentValue("expression");
             ParserConfiguration parserConfiguration = new ParserConfiguration();
@@ -56,10 +59,6 @@ public class ExpressionLanguageCommand {
             Object eval = MVEL.executeExpression(serializable);
             process.write(JsonUtils.toJson(eval) + Constants.CRLF);
             process.end();
-        });
-
-        // Register the command
-        CommandRegistry registry = CommandRegistry.getShared(vertx);
-        registry.registerCommand(builder.build(vertx));
+        };
     }
 }

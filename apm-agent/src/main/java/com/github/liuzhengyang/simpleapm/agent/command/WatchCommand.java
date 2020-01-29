@@ -1,4 +1,4 @@
-package com.github.liuzhengyang.simpleapm.agent.vertx;
+package com.github.liuzhengyang.simpleapm.agent.command;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
@@ -15,9 +15,9 @@ import com.github.liuzhengyang.simpleapm.agent.InstrumentationHolder;
 import com.github.liuzhengyang.simpleapm.agent.asm.MonitorClassVisitor;
 import com.github.liuzhengyang.simpleapm.agent.util.DumpUtils;
 import com.github.liuzhengyang.simpleapm.agent.util.ObjectFormatter;
+import com.github.liuzhengyang.simpleapm.agent.vertx.VertxServer;
 
 import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
 import io.vertx.core.cli.Argument;
 import io.vertx.core.cli.CLI;
 import io.vertx.core.cli.Option;
@@ -25,90 +25,12 @@ import io.vertx.ext.shell.cli.CliToken;
 import io.vertx.ext.shell.cli.Completion;
 import io.vertx.ext.shell.command.CommandBuilder;
 import io.vertx.ext.shell.command.CommandProcess;
-import io.vertx.ext.shell.command.CommandRegistry;
 
-public class WatchCommand {
+public class WatchCommand implements ApmCommand {
 
-    public static void buildWatchCommand(Vertx vertx) {
-        CLI cli = CLI.create("watch").
-                addArgument(new Argument().setArgName("class-pattern")).
-                addArgument(new Argument().setArgName("method-pattern")).
-                addArgument(new Argument().setRequired(false).setArgName("method-pattern")).
-                addOption(new Option().setArgName("help").setShortName("h").setLongName("help"));
-        CommandBuilder builder = CommandBuilder.command(cli);
-        builder.processHandler(WatchCommand::watchProcessHelper)
-               .completionHandler(getCompletionHandler());
-
-        // Register the command
-        CommandRegistry registry = CommandRegistry.getShared(vertx);
-        registry.registerCommand(builder.build(vertx));
-    }
-
-    private static void watchProcessHelper(CommandProcess process) {
-        List<String> args = process.args();
-        Instrumentation instrumentation = InstrumentationHolder.getInstrumentation();
-        Class[] allLoadedClasses;
-        Pattern classPattern = Pattern.compile(args.get(0));
-        allLoadedClasses = instrumentation.getAllLoadedClasses();
-        Pattern methodPattern = Pattern.compile(args.get(1));
-        if (args.size() > 2) {
-            String resultPattern = args.get(2);
-            ObjectFormatter.setPattern(resultPattern);
-        }
-        List<Class<?>> toInstrumentClassList = new ArrayList<>();
-        for (Class loadedClass : allLoadedClasses) {
-            if (classPattern.matcher(loadedClass.getName()).matches()) {
-                toInstrumentClassList.add(loadedClass);
-            }
-        }
-        ClassFileTransformer classFileTransformer = (loader, className, classBeingRedefined, protectionDomain, classfileBuffer) -> {
-            if (classPattern.matcher(className).matches()) {
-                try {
-                    byte[] result = transformBytes(methodPattern, classfileBuffer);
-                    DumpUtils.dump(result);
-                    return result;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        };
-        try {
-            InstrumentationHolder.getInstrumentation()
-                    .addTransformer(classFileTransformer, true);
-            toInstrumentClassList.forEach(clazz -> {
-                try {
-                    InstrumentationHolder.getInstrumentation().retransformClasses(clazz);
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                }
-            });
-        } finally {
-            InstrumentationHolder.getInstrumentation().removeTransformer(classFileTransformer);
-        }
-        process.interruptHandler(v -> {
-            VertxServer.currentProcess.write("Reset \r\n");
-            toInstrumentClassList.forEach(clazz -> {
-                try {
-                    InstrumentationHolder.getInstrumentation().retransformClasses(clazz);
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                }
-            });
-            VertxServer.currentProcess.end();
-        });
-    }
-
-    public static byte[] transformBytes(Pattern methodPattern, byte[] bytes) {
-        ClassReader classReader = new ClassReader(bytes);
-        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-        MonitorClassVisitor monitorClassVisitor = new MonitorClassVisitor(methodPattern, classWriter);
-        classReader.accept(monitorClassVisitor, ClassReader.EXPAND_FRAMES);
-        return classWriter.toByteArray();
-    }
-
-
-    private static Handler<Completion> getCompletionHandler() {
+    // refactoring: magic number, comment
+    @Override
+    public Handler<Completion> getCompletionHandler() {
         return event -> {
             List<CliToken> cliTokens = event.lineTokens();
             Instrumentation instrumentation = InstrumentationHolder.getInstrumentation();
@@ -173,4 +95,81 @@ public class WatchCommand {
         };
     }
 
+    @Override
+    public CommandBuilder getCommandBuilder() {
+        CLI cli = CLI.create("watch").
+                addArgument(new Argument().setArgName("class-pattern")).
+                addArgument(new Argument().setArgName("method-pattern")).
+                addArgument(new Argument().setRequired(false).setArgName("method-pattern")).
+                addOption(new Option().setArgName("help").setShortName("h").setLongName("help"));
+        return CommandBuilder.command(cli);
+    }
+
+    @Override
+    public Handler<CommandProcess> getCommandProcessHandler() {
+        return this::watchProcessHelper;
+    }
+
+    private void watchProcessHelper(CommandProcess process) {
+        List<String> args = process.args();
+        Instrumentation instrumentation = InstrumentationHolder.getInstrumentation();
+        Class[] allLoadedClasses;
+        Pattern classPattern = Pattern.compile(args.get(0));
+        allLoadedClasses = instrumentation.getAllLoadedClasses();
+        Pattern methodPattern = Pattern.compile(args.get(1));
+        if (args.size() > 2) {
+            String resultPattern = args.get(2);
+            ObjectFormatter.setPattern(resultPattern);
+        }
+        List<Class<?>> toInstrumentClassList = new ArrayList<>();
+        for (Class loadedClass : allLoadedClasses) {
+            if (classPattern.matcher(loadedClass.getName()).matches()) {
+                toInstrumentClassList.add(loadedClass);
+            }
+        }
+        ClassFileTransformer classFileTransformer = (loader, className, classBeingRedefined, protectionDomain, classfileBuffer) -> {
+            if (classPattern.matcher(className).matches()) {
+                try {
+                    byte[] result = transformBytes(methodPattern, classfileBuffer);
+                    DumpUtils.dump(result);
+                    return result;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        };
+        try {
+            InstrumentationHolder.getInstrumentation()
+                    .addTransformer(classFileTransformer, true);
+            toInstrumentClassList.forEach(clazz -> {
+                try {
+                    InstrumentationHolder.getInstrumentation().retransformClasses(clazz);
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+            });
+        } finally {
+            InstrumentationHolder.getInstrumentation().removeTransformer(classFileTransformer);
+        }
+        process.interruptHandler(v -> {
+            VertxServer.currentProcess.write("Reset \r\n");
+            toInstrumentClassList.forEach(clazz -> {
+                try {
+                    InstrumentationHolder.getInstrumentation().retransformClasses(clazz);
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+            });
+            VertxServer.currentProcess.end();
+        });
+    }
+
+    public static byte[] transformBytes(Pattern methodPattern, byte[] bytes) {
+        ClassReader classReader = new ClassReader(bytes);
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        MonitorClassVisitor monitorClassVisitor = new MonitorClassVisitor(methodPattern, classWriter);
+        classReader.accept(monitorClassVisitor, ClassReader.EXPAND_FRAMES);
+        return classWriter.toByteArray();
+    }
 }

@@ -1,4 +1,4 @@
-package com.github.liuzhengyang.simpleapm.agent.vertx;
+package com.github.liuzhengyang.simpleapm.agent.command;
 
 import java.lang.instrument.Instrumentation;
 import java.util.ArrayList;
@@ -7,15 +7,20 @@ import java.util.regex.Pattern;
 
 import com.github.liuzhengyang.simpleapm.agent.InstrumentationHolder;
 
-import io.vertx.core.Vertx;
+import io.vertx.core.Handler;
 import io.vertx.ext.shell.command.CommandBuilder;
-import io.vertx.ext.shell.command.CommandRegistry;
+import io.vertx.ext.shell.command.CommandProcess;
 
-public class SearchClassCommand {
+public class SearchClassCommand implements ApmCommand {
 
-    public static void buildSearchClassCommand(Vertx vertx) {
-        CommandBuilder builder = CommandBuilder.command("sc");
-        builder.processHandler(process -> {
+    @Override
+    public CommandBuilder getCommandBuilder() {
+        return CommandBuilder.command("sc");
+    }
+
+    @Override
+    public Handler<CommandProcess> getCommandProcessHandler() {
+        return process -> {
             List<String> args = process.args();
             Pattern classPattern = Pattern.compile(args.get(0));
 
@@ -34,11 +39,6 @@ public class SearchClassCommand {
             });
             // End the process
             process.end();
-        });
-
-        // Register the command
-        CommandRegistry registry = CommandRegistry.getShared(vertx);
-        registry.registerCommand(builder.build(vertx));
+        };
     }
-
 }

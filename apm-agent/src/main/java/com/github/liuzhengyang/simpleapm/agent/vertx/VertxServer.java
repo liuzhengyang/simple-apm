@@ -3,13 +3,16 @@ package com.github.liuzhengyang.simpleapm.agent.vertx;
 import static com.github.liuzhengyang.simpleapm.agent.util.BannerUtil.getBanner;
 
 import java.lang.instrument.Instrumentation;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.liuzhengyang.simpleapm.agent.InstrumentationHolder;
-import com.github.liuzhengyang.simpleapm.agent.Looper;
+import com.github.liuzhengyang.simpleapm.agent.command.ApmCommand;
+import com.github.liuzhengyang.simpleapm.example.Looper;
 
 import io.vertx.core.Vertx;
 import io.vertx.ext.shell.ShellService;
@@ -32,7 +35,7 @@ public class VertxServer {
     public static void main(String[] args) {
         Instrumentation install = ByteBuddyAgent.install();
         InstrumentationHolder.setInstrumentation(install);
-        Looper.asyncLoop();
+        Looper.startAsync();
         startShellServer();
     }
 
@@ -46,15 +49,26 @@ public class VertxServer {
                                 .setPort(HTTP_PORT))
                         .setSessionTimeout(TimeUnit.DAYS.toMillis(1))
         );
-        WatchCommand.buildWatchCommand(vertx);
-        ShutdownCommand.buildShutdownCommand(vertx);
-        SearchClassCommand.buildSearchClassCommand(vertx);
-        ExpressionLanguageCommand.buildExpressionCommand(vertx);
-        ClassLoaderCommand.buildClassLoaderCommand(vertx);
-        DumpCommand.buildDumpCommand(vertx);
-
+        registerCommands();
         service.start();
         logger.info("Server started at {}", TCP_PORT);
+    }
+
+    private static void registerCommands() {
+        Reflections reflections = new Reflections("com.github.liuzhengyang.simpleapm");
+        Set<Class<? extends ApmCommand>> allApmCommands = reflections.getSubTypesOf(ApmCommand.class);
+        allApmCommands.forEach(apmCommand -> {
+            try {
+                ApmCommand abstractApmCommand = apmCommand.newInstance();
+                abstractApmCommand.registerCommand(vertx);
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static Vertx getVertx() {
+        return vertx;
     }
 
 }

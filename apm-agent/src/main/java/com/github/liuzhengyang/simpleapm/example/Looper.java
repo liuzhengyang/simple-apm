@@ -1,6 +1,4 @@
-package com.github.liuzhengyang.simpleapm.agent;
-
-import static jdk.nashorn.internal.objects.NativeMath.random;
+package com.github.liuzhengyang.simpleapm.example;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -9,20 +7,20 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created on 2019-10-28
  */
 public class Looper {
-    public static void main(String[] args) {
-        asyncLoop();
+
+    public static void startAsync() {
+        new Thread(() -> startLoop()).start();
     }
-    public static void asyncLoop() {
-        new Thread(() -> {
-            for (int i = 0; i < 1000; i++) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                hello(ThreadLocalRandom.current().nextInt());
+
+    public static void startLoop() {
+        for (int i = 0; i < 1000; i++) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        }).start();
+            hello(ThreadLocalRandom.current().nextInt());
+        }
     }
 
     public static String hello(long random) {
