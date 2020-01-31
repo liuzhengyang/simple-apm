@@ -30,4 +30,19 @@ public class Bootstrap {
         }
 
     }
+
+    private static String getToolsJarPath() {
+        return null;
+    }
+
+    /**
+     * 1. Try to find java home from System Property java.home
+     * 2. If jdk > 8, FOUND_JAVA_HOME set to java.home
+     * 3. If jdk <=8, try to find tools.jar under java.home
+     *
+     * @return
+     */
+    private static String getJavaHome() {
+        return null;
+    }
 }
