@@ -5,7 +5,7 @@
     <groupId>com.github.liuzhengyang</groupId>
     <artifactId>simple-apm</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <modules>
         <module>apm-agent</module>
         <module>apm-boot</module>
@@ -132,7 +132,7 @@
         <connection>scm:git:git://github.com/liuzhengyang/simple-apm.git</connection>
         <developerConnection>scm:git:git@github.com:liuzhengyang/simple-apm.git</developerConnection>
         <url>https://github.com/liuzhengyang/simple-apm</url>
-        <tag>simple-apm-1.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <build>
