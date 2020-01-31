@@ -1,5 +1,8 @@
 package com.github.liuzhengyang.simpleapm.agent.command;
 
+import com.github.liuzhengyang.simpleapm.agent.Terminal;
+import com.github.liuzhengyang.simpleapm.agent.VertxServer;
+
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.ext.shell.cli.Completion;
@@ -15,7 +18,10 @@ public interface ApmCommand {
     }
     default void registerCommand(Vertx vertx) {
         CommandBuilder commandBuilder = getCommandBuilder();
-        commandBuilder.processHandler(getCommandProcessHandler());
+        commandBuilder.processHandler(process -> {
+            Terminal.setCurrentProcess(process);
+            getCommandProcessHandler().handle(process);
+        });
         Handler<Completion> completionHandler = getCompletionHandler();
         if (completionHandler != null) {
             commandBuilder.completionHandler(completionHandler);

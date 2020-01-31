@@ -12,6 +12,7 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 
 import com.github.liuzhengyang.simpleapm.agent.InstrumentationHolder;
+import com.github.liuzhengyang.simpleapm.agent.Terminal;
 import com.github.liuzhengyang.simpleapm.agent.asm.MonitorClassVisitor;
 import com.github.liuzhengyang.simpleapm.agent.util.DumpUtils;
 import com.github.liuzhengyang.simpleapm.agent.util.ObjectFormatter;
@@ -153,7 +154,7 @@ public class WatchCommand implements ApmCommand {
             InstrumentationHolder.getInstrumentation().removeTransformer(classFileTransformer);
         }
         process.interruptHandler(v -> {
-            VertxServer.currentProcess.write("Reset \r\n");
+            Terminal.getCurrentProcess().write("Reset \r\n");
             toInstrumentClassList.forEach(clazz -> {
                 try {
                     InstrumentationHolder.getInstrumentation().retransformClasses(clazz);
@@ -161,7 +162,7 @@ public class WatchCommand implements ApmCommand {
                     e.printStackTrace();
                 }
             });
-            VertxServer.currentProcess.end();
+            Terminal.getCurrentProcess().end();
         });
     }
 

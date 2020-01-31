@@ -17,7 +17,6 @@ import io.vertx.core.Vertx;
 import io.vertx.ext.shell.ShellService;
 import io.vertx.ext.shell.ShellServiceOptions;
 import io.vertx.ext.shell.command.AnnotatedCommand;
-import io.vertx.ext.shell.command.CommandProcess;
 import io.vertx.ext.shell.command.CommandRegistry;
 import io.vertx.ext.shell.term.HttpTermOptions;
 import io.vertx.ext.shell.term.TelnetTermOptions;
@@ -27,8 +26,6 @@ public class VertxServer {
     private static final Logger logger = LoggerFactory.getLogger(VertxServer.class);
 
     public static Vertx vertx = Vertx.vertx();
-
-    public static CommandProcess currentProcess = null;
 
     private static final int TCP_PORT = 6000;
     private static final int HTTP_PORT = 5000;
