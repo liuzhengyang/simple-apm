@@ -1,13 +1,16 @@
 package com.github.liuzhengyang.simpleapm.agent.command;
 
-import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.mvel2.MVEL;
+import org.mvel2.MVELInterpretedRuntime;
 import org.mvel2.ParserConfiguration;
 import org.mvel2.ParserContext;
+import org.mvel2.integration.VariableResolverFactory;
+import org.mvel2.integration.impl.MapVariableResolverFactory;
 
-import com.github.liuzhengyang.simpleapm.agent.Constants;
 import com.github.liuzhengyang.simpleapm.agent.util.ClassLoaderUtils;
+import com.github.liuzhengyang.simpleapm.agent.util.CommandProcessUtil;
 import com.github.liuzhengyang.simpleapm.agent.util.JsonUtils;
 
 import io.vertx.core.Handler;
@@ -18,6 +21,13 @@ import io.vertx.ext.shell.command.CommandBuilder;
 import io.vertx.ext.shell.command.CommandProcess;
 
 public class ExpressionLanguageCommand implements ApmCommand {
+
+    private Map<String, Object> variables = new HashMap<>();
+    private VariableResolverFactory variableResolverFactory;
+
+    public ExpressionLanguageCommand() {
+        variableResolverFactory = new MapVariableResolverFactory(variables);
+    }
 
     @Override
     public CommandBuilder getCommandBuilder() {
@@ -55,9 +65,9 @@ public class ExpressionLanguageCommand implements ApmCommand {
                     }
                 }
             }
-            Serializable serializable = MVEL.compileExpression(line, parserContext);
-            Object eval = MVEL.executeExpression(serializable);
-            process.write(JsonUtils.toJson(eval) + Constants.CRLF);
+            MVELInterpretedRuntime runtime = new MVELInterpretedRuntime(line, null, variableResolverFactory, parserContext);
+            Object parse = runtime.parse();
+            CommandProcessUtil.println(process, "%s", JsonUtils.toJson(parse));
             process.end();
         };
     }

@@ -1,6 +1,6 @@
 package com.github.liuzhengyang.simpleapm.agent.command;
 
-import com.github.liuzhengyang.simpleapm.agent.vertx.VertxServer;
+import com.github.liuzhengyang.simpleapm.agent.VertxServer;
 
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;

@@ -1,4 +1,4 @@
-package com.github.liuzhengyang.simpleapm.agent.vertx;
+package com.github.liuzhengyang.simpleapm.agent;
 
 import static com.github.liuzhengyang.simpleapm.agent.util.BannerUtil.getBanner;
 
@@ -10,14 +10,15 @@ import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.liuzhengyang.simpleapm.agent.InstrumentationHolder;
 import com.github.liuzhengyang.simpleapm.agent.command.ApmCommand;
 import com.github.liuzhengyang.simpleapm.example.Looper;
 
 import io.vertx.core.Vertx;
 import io.vertx.ext.shell.ShellService;
 import io.vertx.ext.shell.ShellServiceOptions;
+import io.vertx.ext.shell.command.AnnotatedCommand;
 import io.vertx.ext.shell.command.CommandProcess;
+import io.vertx.ext.shell.command.CommandRegistry;
 import io.vertx.ext.shell.term.HttpTermOptions;
 import io.vertx.ext.shell.term.TelnetTermOptions;
 import net.bytebuddy.agent.ByteBuddyAgent;
@@ -51,7 +52,8 @@ public class VertxServer {
         );
         registerCommands();
         service.start();
-        logger.info("Server started at {}", TCP_PORT);
+        logger.info("Tcp Server started at {}", TCP_PORT);
+        logger.info("Http Server started at {}, visit http://localhost:{}/shell.html", HTTP_PORT, HTTP_PORT);
     }
 
     private static void registerCommands() {
@@ -64,6 +66,10 @@ public class VertxServer {
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
+        });
+        reflections.getSubTypesOf(AnnotatedCommand.class).forEach(command -> {
+            CommandRegistry registry = CommandRegistry.getShared(vertx);
+            registry.registerCommand(command);
         });
     }
 

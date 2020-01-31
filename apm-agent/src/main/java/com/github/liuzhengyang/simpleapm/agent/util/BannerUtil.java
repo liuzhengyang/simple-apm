@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.github.liuzhengyang.simpleapm.agent.vertx.VertxServer;
+import com.github.liuzhengyang.simpleapm.agent.VertxServer;
 
 public class BannerUtil {
     public static String getBanner() {
