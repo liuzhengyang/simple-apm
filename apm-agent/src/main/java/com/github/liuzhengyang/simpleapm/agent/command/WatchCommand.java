@@ -15,7 +15,7 @@ import com.github.liuzhengyang.simpleapm.agent.InstrumentationHolder;
 import com.github.liuzhengyang.simpleapm.agent.asm.MonitorClassVisitor;
 import com.github.liuzhengyang.simpleapm.agent.util.DumpUtils;
 import com.github.liuzhengyang.simpleapm.agent.util.ObjectFormatter;
-import com.github.liuzhengyang.simpleapm.agent.vertx.VertxServer;
+import com.github.liuzhengyang.simpleapm.agent.VertxServer;
 
 import io.vertx.core.Handler;
 import io.vertx.core.cli.Argument;

@@ -5,26 +5,22 @@ import java.util.Map;
 import com.github.liuzhengyang.simpleapm.agent.util.ClassLoaderUtils;
 import com.github.liuzhengyang.simpleapm.agent.util.CommandProcessUtil;
 
-import io.vertx.core.Handler;
-import io.vertx.ext.shell.command.CommandBuilder;
+import io.vertx.core.cli.annotations.Name;
+import io.vertx.core.cli.annotations.Summary;
+import io.vertx.ext.shell.command.AnnotatedCommand;
 import io.vertx.ext.shell.command.CommandProcess;
 
 /**
  * @author liuzhengyang
  */
-public class ClassLoaderCommand implements ApmCommand {
+@Name("classloader")
+@Summary("Get all class loaders")
+public class ClassLoaderCommand extends AnnotatedCommand {
 
     @Override
-    public CommandBuilder getCommandBuilder() {
-        return CommandBuilder.command("classloader");
-    }
-
-    @Override
-    public Handler<CommandProcess> getCommandProcessHandler() {
-        return process -> {
-            Map<String, ClassLoader> allClassLoader = ClassLoaderUtils.getAllClassLoader();
-            allClassLoader.forEach((hashCode, loader) -> CommandProcessUtil.println(process, "%s %s", hashCode, loader));
-            process.end();
-        };
+    public void process(CommandProcess process) {
+        Map<String, ClassLoader> allClassLoader = ClassLoaderUtils.getAllClassLoader();
+        allClassLoader.forEach((hashCode, loader) -> CommandProcessUtil.println(process, "%s %s", hashCode, loader));
+        process.end();
     }
 }
