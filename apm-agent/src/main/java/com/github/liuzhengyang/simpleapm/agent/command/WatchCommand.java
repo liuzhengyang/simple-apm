@@ -154,7 +154,7 @@ public class WatchCommand implements ApmCommand {
             InstrumentationHolder.getInstrumentation().removeTransformer(classFileTransformer);
         }
         process.interruptHandler(v -> {
-            Terminal.getCurrentProcess().write("Reset \r\n");
+            Terminal.write("Reset \r\n");
             toInstrumentClassList.forEach(clazz -> {
                 try {
                     InstrumentationHolder.getInstrumentation().retransformClasses(clazz);
