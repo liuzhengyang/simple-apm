@@ -3,12 +3,12 @@
     <parent>
         <artifactId>simple-apm</artifactId>
         <groupId>com.github.liuzhengyang</groupId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>apm-agent</artifactId>
-  <version>1.1-SNAPSHOT</version>
+   <version>${simple-apm.version}</version>
 
     <build>
         <plugins>
