@@ -2,3 +2,4 @@
 .idea/
 target/
 .DS_STORE
+.flattened-pom.xml
