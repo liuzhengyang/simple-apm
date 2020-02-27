@@ -6,7 +6,7 @@
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <version>${simple-apm.version}</version>
+    <version>1.7</version>
     <artifactId>apm-core</artifactId>
 
 
