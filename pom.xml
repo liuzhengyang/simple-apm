@@ -40,7 +40,7 @@
     </scm>
 
     <properties>
-        <simple-apm.version>1.5-SNAPSHOT</simple-apm.version>
+        <simple-apm.version>1.5</simple-apm.version>
         <asm.version>7.2</asm.version>
     </properties>
 
