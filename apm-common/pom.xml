@@ -3,7 +3,7 @@
     <parent>
         <artifactId>simple-apm</artifactId>
         <groupId>com.github.liuzhengyang</groupId>
-        <version>1.0</version>
+        <version>${simple-apm.version}</version>
     </parent>
     <version>1.8</version>
     <modelVersion>4.0.0</modelVersion>
