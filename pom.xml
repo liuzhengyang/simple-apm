@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.liuzhengyang</groupId>
     <artifactId>simple-apm</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <modules>
         <module>apm-agent</module>
         <module>apm-boot</module>
@@ -37,11 +36,11 @@
         <connection>scm:git:git://github.com/liuzhengyang/simple-apm.git</connection>
         <developerConnection>scm:git:git@github.com:liuzhengyang/simple-apm.git</developerConnection>
         <url>https://github.com/liuzhengyang/simple-apm</url>
-        <tag>HEAD</tag>
+        <tag>simple-apm-1.0</tag>
     </scm>
 
     <properties>
-        <simple-apm.version>1.4</simple-apm.version>
+        <simple-apm.version>1.5-SNAPSHOT</simple-apm.version>
         <asm.version>7.2</asm.version>
     </properties>
 
@@ -299,6 +298,17 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.5.3</version>
+                        <configuration>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <useReleaseProfile>false</useReleaseProfile>
+                            <releaseProfiles>release</releaseProfiles>
+                            <goals>deploy</goals>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

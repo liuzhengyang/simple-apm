@@ -1,6 +1,6 @@
 package com.github.liuzhengyang.simpleapm;
 
-import static com.github.liuzhengyang.simpleapm.common.ApmVersionUtil.getLastestVersion;
+import static com.github.liuzhengyang.simpleapm.common.ApmVersionUtil.getLatestVersion;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,7 +23,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.liuzhengyang.simpleapm.common.ApmVersionUtil;
 import com.github.liuzhengyang.simpleapm.common.JavaHomeUtil;
 import com.github.liuzhengyang.simpleapm.common.JavaVersionUtil;
 
@@ -121,13 +120,13 @@ public class Bootstrap {
     }
 
     private static File findLocalApmCoreJarFiles() {
-        File targetFile = new File(System.getProperty("user.home") + "/.simpleapm/", "apm-core-" + getLastestVersion() + "-jar-with-dependencies.jar");
+        File targetFile = new File(System.getProperty("user.home") + "/.simpleapm/", "apm-core-" + getLatestVersion() + "-jar-with-dependencies.jar");
         targetFile.getParentFile().mkdirs();
         if (targetFile.exists()) {
             return targetFile;
         }
         logger.info("Apm Agent jar not found {}, downloading...", targetFile.getAbsolutePath());
-        String url = "https://maven.aliyun.com/repository/public/com/github/liuzhengyang/apm-core/" + getLastestVersion() + "/apm-core-" + getLastestVersion() + "-jar-with-dependencies.jar";
+        String url = "https://maven.aliyun.com/repository/public/com/github/liuzhengyang/apm-core/" + getLatestVersion() + "/apm-core-" + getLatestVersion() + "-jar-with-dependencies.jar";
         try {
             InputStream inputStream = openUrlStream(url);
             Files.copy(inputStream, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
