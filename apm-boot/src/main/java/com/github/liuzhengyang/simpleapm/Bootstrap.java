@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -25,11 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import com.github.liuzhengyang.simpleapm.common.JavaHomeUtil;
 import com.github.liuzhengyang.simpleapm.common.JavaVersionUtil;
-
-import sun.jvmstat.monitor.MonitorException;
-import sun.jvmstat.monitor.MonitoredHost;
-import sun.jvmstat.monitor.MonitoredVmUtil;
-import sun.jvmstat.monitor.VmIdentifier;
 
 /**
  * @author liuzhengyang
@@ -165,15 +159,6 @@ public class Bootstrap {
             return openUrlStream(location);
         }
         return conn.getInputStream();
-    }
-
-    private static String getVmArgs(String pid) {
-        try {
-            return MonitoredVmUtil.jvmArgs(MonitoredHost.getMonitoredHost("localhost").getMonitoredVm(new VmIdentifier("//" + pid + "?mode=r")));
-        } catch (MonitorException | URISyntaxException e) {
-            e.printStackTrace();
-            return "";
-        }
     }
 
     private static String getToolsJarPath() {

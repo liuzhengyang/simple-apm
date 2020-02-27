@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>apm-agent</artifactId>
-   <version>1.5</version>
+    <version>${simple-apm.version}</version>
 
     <build>
         <plugins>
