@@ -34,9 +34,7 @@ public class SearchClassCommand implements ApmCommand {
                     targetClassList.add(allLoadedClass);
                 }
             }
-            targetClassList.forEach(clazz -> {
-                process.write(String.format("%s %s\r\n", clazz, clazz.getClassLoader()));
-            });
+            targetClassList.forEach(clazz -> process.write(String.format("%s %s %s\r\n", clazz, clazz.getClassLoader(), clazz.getClassLoader().hashCode())));
             // End the process
             process.end();
         };

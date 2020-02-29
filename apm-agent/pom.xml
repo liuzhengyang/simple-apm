@@ -8,7 +8,34 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>apm-agent</artifactId>
-    <version>1.8</version>
+    <version>${simple-apm.version}</version>
+
+    <properties>
+        <procyon.version>0.5.36</procyon.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.bitbucket.mstrobel</groupId>
+            <artifactId>procyon-core</artifactId>
+            <version>${procyon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bitbucket.mstrobel</groupId>
+            <artifactId>procyon-expressions</artifactId>
+            <version>${procyon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bitbucket.mstrobel</groupId>
+            <artifactId>procyon-reflection</artifactId>
+            <version>${procyon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bitbucket.mstrobel</groupId>
+            <artifactId>procyon-compilertools</artifactId>
+            <version>${procyon.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
