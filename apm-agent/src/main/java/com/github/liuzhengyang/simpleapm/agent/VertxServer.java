@@ -66,6 +66,7 @@ public class VertxServer {
         });
         reflections.getSubTypesOf(AnnotatedCommand.class).forEach(command -> {
             CommandRegistry registry = CommandRegistry.getShared(vertx);
+            logger.info("Register {}", command.getName());
             registry.registerCommand(command);
         });
     }

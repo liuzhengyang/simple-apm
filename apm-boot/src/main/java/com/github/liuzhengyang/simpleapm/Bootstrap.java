@@ -132,13 +132,13 @@ public class Bootstrap {
     }
 
     private static File findLocalApmAgentJarFiles() {
-        File targetFile = new File(System.getProperty("user.home") + "/.simpleapm/", "apm-agent-1.3-jar-with-dependencies.jar");
+        File targetFile = new File(System.getProperty("user.home") + "/.simpleapm/", "apm-agent-" + getLatestVersion() + " -jar-with-dependencies.jar");
         targetFile.getParentFile().mkdirs();
         if (targetFile.exists()) {
             return targetFile;
         }
         logger.info("Apm Agent jar not found {}, downloading...", targetFile.getAbsolutePath());
-        String url = "https://maven.aliyun.com/repository/public/com/github/liuzhengyang/apm-agent/1.3/apm-agent-1.3-jar-with-dependencies.jar";
+        String url = "https://maven.aliyun.com/repository/public/com/github/liuzhengyang/apm-agent/" + getLatestVersion() + "/apm-agent-" + getLatestVersion() + "-jar-with-dependencies.jar";
         try {
             InputStream inputStream = openUrlStream(url);
             Files.copy(inputStream, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
