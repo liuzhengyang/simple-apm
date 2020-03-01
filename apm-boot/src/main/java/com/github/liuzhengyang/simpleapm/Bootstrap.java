@@ -110,7 +110,7 @@ public class Bootstrap {
             JvmProcess jvmProcess = new JvmProcess(pid, args);
             jvmProcessMap.put(counter.incrementAndGet(), jvmProcess);
         }
-        logger.info("Jps Result {}", jpsResult);
+        logger.debug("Jps Result {}", jpsResult);
         return jvmProcessMap;
     }
 

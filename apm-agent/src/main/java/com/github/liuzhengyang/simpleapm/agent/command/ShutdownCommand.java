@@ -9,22 +9,6 @@ import io.vertx.ext.shell.command.CommandProcess;
 import io.vertx.ext.shell.command.CommandRegistry;
 
 public class ShutdownCommand implements ApmCommand {
-    public static void buildShutdownCommand(Vertx vertx) {
-        CommandBuilder builder = CommandBuilder.command("shutdown");
-        builder.processHandler(process -> {
-
-            // Write a message to the console
-            process.write("Shutting down...");
-
-            // End the process
-            process.end();
-            vertx.close();
-        });
-
-        // Register the command
-        CommandRegistry registry = CommandRegistry.getShared(vertx);
-        registry.registerCommand(builder.build(vertx));
-    }
 
     @Override
     public CommandBuilder getCommandBuilder() {

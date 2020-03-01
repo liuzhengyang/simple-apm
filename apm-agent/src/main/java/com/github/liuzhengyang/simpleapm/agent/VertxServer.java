@@ -3,14 +3,21 @@ package com.github.liuzhengyang.simpleapm.agent;
 import static com.github.liuzhengyang.simpleapm.agent.util.BannerUtil.getBanner;
 
 import java.lang.instrument.Instrumentation;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.liuzhengyang.simpleapm.agent.command.ApmCommand;
+import com.github.liuzhengyang.simpleapm.agent.command.ClassLoaderCommand;
+import com.github.liuzhengyang.simpleapm.agent.command.DumpCommand;
+import com.github.liuzhengyang.simpleapm.agent.command.ExpressionLanguageCommand;
+import com.github.liuzhengyang.simpleapm.agent.command.SearchClassCommand;
+import com.github.liuzhengyang.simpleapm.agent.command.ShutdownCommand;
+import com.github.liuzhengyang.simpleapm.agent.command.WatchCommand;
+import com.github.liuzhengyang.simpleapm.agent.command.decompiler.ProcyonCommand;
 import com.github.liuzhengyang.simpleapm.example.Looper;
 
 import io.vertx.core.Vertx;
@@ -54,9 +61,17 @@ public class VertxServer {
     }
 
     private static void registerCommands() {
-        Reflections reflections = new Reflections("com.github.liuzhengyang.simpleapm");
-        Set<Class<? extends ApmCommand>> allApmCommands = reflections.getSubTypesOf(ApmCommand.class);
-        allApmCommands.forEach(apmCommand -> {
+        List<Class<? extends ApmCommand>> apmCommandList = new ArrayList<>();
+        apmCommandList.add(DumpCommand.class);
+        apmCommandList.add(ExpressionLanguageCommand.class);
+        apmCommandList.add(SearchClassCommand.class);
+        apmCommandList.add(ShutdownCommand.class);
+        apmCommandList.add(WatchCommand.class);
+        List<Class<? extends AnnotatedCommand>> annotatedCommandList = new ArrayList<>();
+        annotatedCommandList.add(ClassLoaderCommand.class);
+        annotatedCommandList.add(ProcyonCommand.class);
+
+        apmCommandList.forEach(apmCommand -> {
             try {
                 ApmCommand abstractApmCommand = apmCommand.newInstance();
                 abstractApmCommand.registerCommand(vertx);
@@ -64,7 +79,7 @@ public class VertxServer {
                 e.printStackTrace();
             }
         });
-        reflections.getSubTypesOf(AnnotatedCommand.class).forEach(command -> {
+        annotatedCommandList.forEach(command -> {
             CommandRegistry registry = CommandRegistry.getShared(vertx);
             logger.info("Register {}", command.getName());
             registry.registerCommand(command);
