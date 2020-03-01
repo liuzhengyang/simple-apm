@@ -105,8 +105,9 @@ public class Bootstrap {
         AtomicInteger counter = new AtomicInteger();
         while ((line = br.readLine()) != null) {
             jpsResult.add(line);
-            String[] splits = line.split(" ");
-            JvmProcess jvmProcess = new JvmProcess(splits[0], splits[1]);
+            String pid = line.substring(0, line.indexOf(" "));
+            String args = line.substring(line.indexOf(" "));
+            JvmProcess jvmProcess = new JvmProcess(pid, args);
             jvmProcessMap.put(counter.incrementAndGet(), jvmProcess);
         }
         logger.info("Jps Result {}", jpsResult);
@@ -132,7 +133,7 @@ public class Bootstrap {
     }
 
     private static File findLocalApmAgentJarFiles() {
-        File targetFile = new File(System.getProperty("user.home") + "/.simpleapm/", "apm-agent-" + getLatestVersion() + " -jar-with-dependencies.jar");
+        File targetFile = new File(System.getProperty("user.home") + "/.simpleapm/", "apm-agent-" + getLatestVersion() + "-jar-with-dependencies.jar");
         targetFile.getParentFile().mkdirs();
         if (targetFile.exists()) {
             return targetFile;
