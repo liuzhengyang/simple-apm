@@ -32,7 +32,7 @@ import net.bytebuddy.agent.ByteBuddyAgent;
 public class VertxServer {
     private static final Logger logger = LoggerFactory.getLogger(VertxServer.class);
 
-    public static Vertx vertx = Vertx.vertx();
+    private static volatile Vertx vertx;
 
     private static final int TCP_PORT = 6000;
     private static final int HTTP_PORT = 5000;
@@ -45,6 +45,7 @@ public class VertxServer {
     }
 
     public static void startShellServer() {
+        vertx = Vertx.vertx();
         ShellService service = ShellService.create(vertx,
                 new ShellServiceOptions()
                         .setWelcomeMessage(getBanner())
