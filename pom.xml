@@ -40,7 +40,7 @@
     </scm>
 
     <properties>
-        <simple-apm.version>1.10.2</simple-apm.version>
+        <simple-apm.version>1.10.3</simple-apm.version>
         <asm.version>7.2</asm.version>
     </properties>
 
