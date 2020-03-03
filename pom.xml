@@ -43,6 +43,7 @@
     <properties>
         <simple-apm.version>1.10.4</simple-apm.version>
         <asm.version>7.2</asm.version>
+        <vertx.version>3.8.5</vertx.version>
     </properties>
 
     <dependencies>
@@ -135,14 +136,28 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-shell</artifactId>
-            <version>3.8.3</version>
+            <version>${vertx.version}</version>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
-            <version>3.8.3</version>
+            <version>${vertx.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web-templ-freemarker</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
+        </dependency>
     </dependencies>
 
     <distributionManagement>

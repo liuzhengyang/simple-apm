@@ -18,6 +18,7 @@ import com.github.liuzhengyang.simpleapm.agent.command.SearchClassCommand;
 import com.github.liuzhengyang.simpleapm.agent.command.ShutdownCommand;
 import com.github.liuzhengyang.simpleapm.agent.command.WatchCommand;
 import com.github.liuzhengyang.simpleapm.agent.command.decompiler.ProcyonCommand;
+import com.github.liuzhengyang.simpleapm.agent.web.WebServer;
 import com.github.liuzhengyang.simpleapm.example.Looper;
 
 import io.vertx.core.Vertx;
@@ -57,6 +58,7 @@ public class VertxServer {
         );
         registerCommands();
         service.start();
+        WebServer.startWebServer(vertx);
         logger.info("Tcp Server started at {}", TCP_PORT);
         logger.info("Http Server started at {}, visit http://localhost:{}/shell.html", HTTP_PORT, HTTP_PORT);
     }

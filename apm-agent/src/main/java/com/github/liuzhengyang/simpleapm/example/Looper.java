@@ -8,6 +8,10 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Looper {
 
+    public static void main(String[] args) {
+        startLoop();
+    }
+
     public static void startAsync() {
         new Thread(() -> startLoop()).start();
     }
