@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.github.liuzhengyang.simpleapm.agent.util.CommandProcessUtil;
 import com.github.liuzhengyang.simpleapm.agent.util.TypeUtil;
 import com.strobel.decompiler.Decompiler;
+import com.strobel.decompiler.DecompilerSettings;
 import com.strobel.decompiler.PlainTextOutput;
 
 import io.vertx.core.cli.annotations.Argument;
@@ -37,11 +38,19 @@ public class ProcyonCommand extends AnnotatedCommand {
 
     @Override
     public void process(CommandProcess commandProcess) {
-        String internalName = TypeUtil.getInternalName(getClassName());
-        PlainTextOutput plainTextOutput = new PlainTextOutput();
-        Decompiler.decompile(internalName, plainTextOutput);
-        logger.info("Decompile {} result {}", getClassName(), plainTextOutput.toString());
-        CommandProcessUtil.println(commandProcess, "%s", plainTextOutput.toString());
+        String decompiledClass = getDecompiledClass(getClassName());
+        CommandProcessUtil.println(commandProcess, "%s", decompiledClass);
         commandProcess.end();
+    }
+
+    public static String getDecompiledClass(String className) {
+        String internalName = TypeUtil.getInternalName(className);
+        PlainTextOutput plainTextOutput = new PlainTextOutput();
+        DecompilerSettings decompilerSettings = new DecompilerSettings();
+        decompilerSettings.setIncludeLineNumbersInBytecode(false);
+        decompilerSettings.setShowDebugLineNumbers(false);
+        Decompiler.decompile(internalName, plainTextOutput, decompilerSettings);
+        logger.info("Decompile {} result {}", internalName, plainTextOutput.toString());
+        return plainTextOutput.toString();
     }
 }
