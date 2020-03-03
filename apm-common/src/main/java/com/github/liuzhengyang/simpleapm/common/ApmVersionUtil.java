@@ -7,6 +7,6 @@ package com.github.liuzhengyang.simpleapm.common;
  */
 public class ApmVersionUtil {
     public static String getLatestVersion() {
-        return "1.10.4";
+        return "1.10.5";
     }
 }

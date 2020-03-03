@@ -41,7 +41,7 @@
     </scm>
 
     <properties>
-        <simple-apm.version>1.10.4</simple-apm.version>
+        <simple-apm.version>1.10.5</simple-apm.version>
         <asm.version>7.2</asm.version>
         <vertx.version>3.8.5</vertx.version>
     </properties>
