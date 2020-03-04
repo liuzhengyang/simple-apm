@@ -17,6 +17,7 @@ import com.github.liuzhengyang.simpleapm.agent.command.ExpressionLanguageCommand
 import com.github.liuzhengyang.simpleapm.agent.command.SearchClassCommand;
 import com.github.liuzhengyang.simpleapm.agent.command.ShutdownCommand;
 import com.github.liuzhengyang.simpleapm.agent.command.WatchCommand;
+import com.github.liuzhengyang.simpleapm.agent.command.debug.AddBreakpointCommand;
 import com.github.liuzhengyang.simpleapm.agent.command.decompiler.ProcyonCommand;
 import com.github.liuzhengyang.simpleapm.agent.web.WebServer;
 import com.github.liuzhengyang.simpleapm.example.Looper;
@@ -73,6 +74,7 @@ public class VertxServer {
         List<Class<? extends AnnotatedCommand>> annotatedCommandList = new ArrayList<>();
         annotatedCommandList.add(ClassLoaderCommand.class);
         annotatedCommandList.add(ProcyonCommand.class);
+        annotatedCommandList.add(AddBreakpointCommand.class);
 
         apmCommandList.forEach(apmCommand -> {
             try {
