@@ -47,8 +47,9 @@ public class ProcyonCommand extends AnnotatedCommand {
         String internalName = TypeUtil.getInternalName(className);
         PlainTextOutput plainTextOutput = new PlainTextOutput();
         DecompilerSettings decompilerSettings = new DecompilerSettings();
-        decompilerSettings.setIncludeLineNumbersInBytecode(false);
-        decompilerSettings.setShowDebugLineNumbers(false);
+        decompilerSettings.setForceExplicitImports(true);
+        decompilerSettings.setIncludeLineNumbersInBytecode(true);
+        decompilerSettings.setShowDebugLineNumbers(true);
         decompilerSettings.setTypeLoader(new ApmTypeLoader());
         Decompiler.decompile(internalName, plainTextOutput, decompilerSettings);
         logger.info("Decompile {} result {}", internalName, plainTextOutput.toString());

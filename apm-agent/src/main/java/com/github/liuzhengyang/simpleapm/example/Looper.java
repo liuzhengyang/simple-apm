@@ -8,6 +8,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Looper {
 
+    private static int counter = 0;
+
     public static void main(String[] args) {
         startLoop();
     }
@@ -28,6 +30,7 @@ public class Looper {
     }
 
     public static String hello(long random) {
+        counter++;
         System.out.println("Hello");
         random(random);
         return String.valueOf(System.currentTimeMillis());
