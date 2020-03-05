@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import com.github.liuzhengyang.simpleapm.agent.InstrumentationHolder;
+import com.github.liuzhengyang.simpleapm.agent.util.ClassLoaderUtils;
 
 import io.vertx.core.Handler;
 import io.vertx.ext.shell.command.CommandBuilder;
@@ -34,7 +35,7 @@ public class SearchClassCommand implements ApmCommand {
                     targetClassList.add(allLoadedClass);
                 }
             }
-            targetClassList.forEach(clazz -> process.write(String.format("%s %s %s\r\n", clazz, clazz.getClassLoader(), clazz.getClassLoader().hashCode())));
+            targetClassList.forEach(clazz -> process.write(String.format("%s %s %s\r\n", clazz, clazz.getClassLoader(), ClassLoaderUtils.getHashCode(clazz.getClassLoader()))));
             // End the process
             process.end();
         };

@@ -17,9 +17,13 @@ public class ClassLoaderUtils {
         Map<String, ClassLoader> classLoaderMap = new HashMap<>();
         for (Class clazz : allLoadedClasses) {
             if (clazz.getClassLoader() != null) {
-                classLoaderMap.put(Integer.toHexString(clazz.getClassLoader().hashCode()), clazz.getClassLoader());
+                classLoaderMap.put(getHashCode(clazz.getClassLoader()), clazz.getClassLoader());
             }
         }
         return classLoaderMap;
+    }
+
+    public static String getHashCode(ClassLoader classLoader) {
+        return Integer.toHexString(classLoader.hashCode());
     }
 }

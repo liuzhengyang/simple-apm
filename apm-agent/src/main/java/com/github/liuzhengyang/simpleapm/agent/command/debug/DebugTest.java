@@ -1,5 +1,7 @@
 package com.github.liuzhengyang.simpleapm.agent.command.debug;
 
+import java.util.Random;
+
 /**
  * @author liuzhengyang
  * Make something people need.
@@ -14,10 +16,13 @@ public class DebugTest {
 //        int a = count;
         System.out.println(count++);
         System.out.println(tip);
+        int a = 1;
+        int b = 2;
 //        DebugUtils.printField("hello", name);
         name = String.valueOf(System.currentTimeMillis());
         try {
             Thread.sleep(100);
+            double c = b + Math.random();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
