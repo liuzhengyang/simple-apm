@@ -29,12 +29,18 @@ public final class SafeCallerException extends Error {
     this.parameters = parameters;
   }
 
-  /** Gets the error message format. */
+  /**
+   * Gets the error message format.
+   * @return
+   */
   public String getFormat() {
     return format;
   }
 
-  /** Gets the parameters substituting $n placeholders in {@link getFormat}. */
+  /**
+   * Gets the parameters substituting $n placeholders in {@link getFormat}.
+   * @return
+   */
   public String[] getParameters() {
     return parameters;
   }

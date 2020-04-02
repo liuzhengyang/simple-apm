@@ -39,15 +39,9 @@ public final class GcpDebugletVersion {
   /**
    * Return the agent version string.
    * TODO: Remove this method once jni_proxy_code_gen supports field access.
+   * @return version
    */
   public static String getVersion() {
     return VERSION;
-  }
-
-  /**
-   * Main function to print the version string.
-   */
-  public static void main(String[] args) {
-    System.out.println(VERSION);
   }
 }
